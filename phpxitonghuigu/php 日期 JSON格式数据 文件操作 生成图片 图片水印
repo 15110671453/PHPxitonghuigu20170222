@@ -1,0 +1,51 @@
+php 日期 JSON格式数据 文件操作 生成图片 图片水印
+<?php
+
+echo time();//获取时间戳 指明特定程序的版本
+//F2 使用函数的帮助文档
+//年月日 时分秒 自动补零
+//时间 应该和 操作系统一致 
+
+echo date_default_timezone_get();//获取当前操作系统设置的时区
+
+date_default_timezone_set('Asia/Shanghai');//
+
+echo date('Y-m-d H:i:s');//获取日期
+
+echo date('Y-m-d H:i:s',2000);//1970 将时间戳 转换为日期
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

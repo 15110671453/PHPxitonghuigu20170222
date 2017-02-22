@@ -1,0 +1,440 @@
+php的基础知识
+
+php脚本语言 java c++是程序语言
+
+图像处理 
+
+
+开发论坛系统https://github.com/shi-yang/iisns
+
+common                   (通用) 
+    components/          包含 应用组件
+    cache/               包含 缓存出的文件
+    config/              包含 应用配置及其它配置
+    mail/                包含 view files for e-mails
+    models/              包含 前后台通用的模型类
+console                  (控制台)
+    config/              包含 console configurations
+    controllers/         包含 console controllers (commands)
+    migrations/          包含 database migrations
+    models/              包含 console-specific model classes
+    runtime/             包含 Yii 在运行时生成的文件，例如日志和缓存文件
+backend                  (后台应用)
+    assets/              包含 application assets such as JavaScript and CSS
+    config/              包含 后台应用配置及其它配置
+    controllers/         包含 Web controller classes
+    models/              包含 后台模型类
+    runtime/             包含 Yii 在运行时生成的文件，例如日志和缓存文件
+    views/               包含 视图文件
+    web/                 包含 Web 应用根目录，包含 Web 入口文件
+frontend                 (前台应用)
+    assets/              包含 application assets such as JavaScript and CSS
+    config/              包含 前台应用配置及其它配置
+    controllers/         包含 前台控制器类
+    models/              包含 前台模型类
+    runtime/             包含 Yii 在运行时生成的文件，例如日志和缓存文件
+    themes/              包含 视图文件
+    web/                 包含 Web 应用根目录，包含 Web 入口文件
+    widgets/             包含 frontend widgets
+vendor/                  包含 Yii 框架和第三方插件
+environments/            包含 environment-based overrides
+tests                    包含 高级应用程序的各种测试
+    codeception/         包含 tests developed with Codeception PHP Testing Framework
+
+
+-----------------------------------
+php pdo 操作数据库
+
+在linux下 安装php 时 要安装pdo 支持 并在
+php.ini中配置开启 pdo
+
+pdo的工作原理 php pdo手册
+
+PDO 类 pdostatement 预处理类
+pdodrivers 在使用pdo时 必须要使用到的
+
+pdo中 有构造方法 可以new
+
+但是pdostatement 没有构造方法不可以new
+
+这里涉及到php中的单态类
+
+class A{
+	private static $a = null;
+	private function __contruct(){
+
+	}
+	static function makeA(){
+
+	if(self::$a == null)
+	{
+
+	self::$a = new self();
+
+	}
+
+	return self::$a;
+
+	}
+}
+
+print_r( A::makeA() );
+
+
+----------------
+
+pdo 初始化 使用
+
+pdo对象 初始化 PDO __construct
+第一个参数 dsn 数据库连接信息  第二个 第三个参数 用户名 密码 第四个参数
+--------
+new mysqli("localhost","user","password","dbname");
+-----
+
+$dsn
+
+
+
+
+try{
+ 
+ //uri:mysqlPdo.ini 第二种方法 将数据库连接信息写在独立的文件中 mysql:host=localhost;dbname=testdb
+//第三种方法 在php配置 文件中 设置pdo.dsn.mysqlpdo="mysql:host=localhost;dbname=testdb"
+
+ $pdo = new PDO("mysql:host=localhost;dbname=testdb","root","paswd");
+ $pdo->setAttribute(PDO::ATTR_AUTOCOMMIT,0);
+
+	
+}catch(PSOException $e){
+	
+	die("数据库连接失败".$e->getMessage());
+
+}
+
+$pdo->getAttribute(PDO::ATTR_CLIENT_VERSION);//数据库客户端的信息
+$pdo->getAttribute(PDO::ATTR_AUTOCOMMIT);//是否自动提交
+
+print_r($pdo);
+
+--------------
+pdo 对象的应用
+
+执行sql语句
+pdo对象 成员方法的使用
+query($sql) 用于执行查询sql语句 返回pdostatement对象
+
+
+exec($sql)用于执行增删改的操作 返回影响的行数
+
+setAttribute 设置一个 数据库连接对象的 属性
+
+fetchAll() 解析数据；
+
+------------
+
+1.连接数据库
+
+ try {
+
+ 	$pdo = new PDO("mysql:host=localhost;dbname=test;","root","");
+ }catch(PDOException $e)
+ {
+ 	die("数据库连接失败".$e->getMessage());
+
+ }
+ //执行 query 查询一个 预处理对象
+
+ $sql = "select * from stu";
+
+
+ $stmt = $pdo->query($sql);
+
+//这里 最终预处理对象 执行返回查询结果 默认返回的每条对象 中 有关联的信息 也有 索引的信息 如果只要关联的信息 使用PDO::FETCH_ASSOC
+ $list = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+ //解析数据
+ foreach ($list as $val)
+ {
+ // $list代表数据库表中查询后结果集 $val代表每一条数据 下面方法输出 每一条数据的 每一列 信息
+ 	echo $val['id'].----$val['name']."</br>";
+ }
+ // 释放资源
+ $stmt = null;
+ $pdo = null;
+
+
+----------------------------
+$sql =""
+foreach($pdo->query($sql) as $val)
+{
+
+echo $val['id'].----$val['name']."</br>";
+	
+}
+
+----------------
+
+//使用pdo 插入一条数据
+
+$sql = "insert into stu values(null,'oracle','w',44)";
+
+$sql2 = "delete from stu where id = 6 ";
+
+$sql3 = "update set name = 'js' where id =6";
+
+$res = $pdo->exec($sql);
+
+if($res) {
+	
+	echo "success";
+
+}
+
+----------------------
+
+pdo 安全处理 与 事务处理
+
+pdo 异常处理 pdo 预处理 （防止sql注入） pdo 事务处理
+
+pdo 异常处理
+PDOException
+
+PDO::ATTR_ERRMODE
+  设置 PDO::ATTR_ERRMODE//不报错
+  PDO::ERRMODE_WARNING //  以警告模式
+  PDO::ERRMODE_EXCEPTION //以异常方式报错
+
+
+ setAttribute
+ getAttribute
+
+  try{
+
+  $pdo = new PDO("mysql:host=lcoal;dbname=test;","root","");
+
+  $pdo.setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_WARNING);
+
+    $pdo.setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
+
+  } catch(PDOException $e){
+
+  die("数据库连接失败".$e->getMessage());
+
+  }
+
+$sql = "insert into stu values(null,'jike','w',55)";
+
+$res = $pdo->exec($sql);
+
+if($res){
+	echo "OK";
+}else{
+	
+	echo $pdo->errorCode();
+	print_r($pdo->errorInfo());
+
+}
+
+try {
+	
+	$res = $pdo->exec($sql);
+}catch(PDOException $e)
+{
+	
+	echo $e->getMessage();
+}
+
+
+----------------------------------
+
+
+pdo 预处理
+
+pdo预处理的方法 
+prepare() 用于执行查询sql语句 返回pdostatement对象
+
+bindValue() 将值绑定到对应的参数 返回布尔值
+
+bindParam()将值绑定对应的查询占位符 返回布尔值
+
+bindColumn() 用来匹配列名 和一个 指定的变量名
+
+execute()执行一个准备好的预处理语句 返回布尔值
+
+rowCount()返回使用 增删改查 语句后受影响的行数
+
+
+-------------------------
+
+//1.连接数据库
+
+
+
+try {
+	
+	$pdo= new PDO("mysql:host=local;dbname=text;","root","");
+
+
+
+
+}catch (PDOException $e){
+	
+	die (" 数据库连接失败".$e->getMessage());
+
+
+}
+//预处理的sql语句 有两种 一种是问号 一种是 别名
+$sql = "insert into stu(id ,name,sex,age) values(?,?,?,?)";
+
+//这里 sql 语句 不再使用？占位的形式 使用 别名占位的方式 来使用
+$sql = "insert into stu(id ,name,sex,age) values(:id,:name,:sex:age)";
+
+
+$stmt = $pdo->prepare($sql);
+
+//第一种绑定方式
+//对？号 进行参数绑定
+ $stmt->bindValue(1,null);
+ $stmt->bindValue(2,'test');
+  $stmt->bindValue(3,'w');
+   $stmt->bindValue(4,22);
+   //第一种方式 对应 别名 
+
+    $stmt->bindValue("id",null);
+ $stmt->bindValue("name",'test');
+  $stmt->bindValue("sex",'w');
+   $stmt->bindValue("age",22);
+
+//第二种绑定方式
+//绑定参数的方式
+ $stmt->bindValue(1,$id);
+ $stmt->bindValue(2,$name);
+  $stmt->bindValue(3,$sex);
+   $stmt->bindValue(4,$age);
+//下面的变量 只要写在execute 之前就可以
+$id=null;
+$name="8888";
+$sex="ssss";
+$age=33;
+
+   //
+   $stmt->execute();
+
+
+//第三种方法
+
+$stmt->execute(array(null,"test","name",22));
+//别名的时候 要在数组 中 加下标
+$stmt->execute(array("id"=>null,"name" =>"test","sex"=> "name","age"=>22));
+
+   echo $stmt->rowCont();
+
+-----------------------
+//采用 预处理 sql 执行查询 并采用绑定结果的方式输出
+
+$sql = "select id ,name,sex,age from stu";
+
+$stmt = $pdo->prepare($sql);
+
+$stmt->execute();
+
+$stmt->bindColumn(1,$id)
+$stmt->bindColumn(2,$name)
+$stmt->bindColumn("sex",$sex);
+$stmt->bindColumn("age",$age);
+
+while($row=$stmt->fetch(PDO::FETCH_COLUMN))
+{
+	echo "{id}:{name}:{$sex}:{age}";
+}
+
+
+---------------------------------------
+pdo事务处理
+
+数据表需要innodb
+
+事务处理操作方法
+beginTransaction() //开启一个事务
+commit()  //提交事务
+rollback() //回滚
+
+
+try {
+	
+	$pdo = new PDO("mysql:host=local;dbname=test","root","");
+
+	$pdo->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
+}catch(PDOException $e)
+{
+	die("数据库连接失败".$e->getMessage());
+}
+// 执行 数据操作
+
+ try{
+
+ 	//开启事务
+ 	 $pdo->beginTransaction();
+       /*我们对数据库 stu 表 添加约束 name 字段 的值 不能重复*/
+ 	 $sql = "insert into stu(id,name,sex,age) values(?,?,?,?)";
+
+ 	 $stmt = $pdo->prepare($sql);
+
+ 	 $stmt->execute(array(null,"test1","w",11));
+ 	 $stmt->execute(array(null,"test2","w",11));
+ 	 $stmt->execute(array(null,"test1","w",11));
+ 	 //提交事务
+ 	  $pdo->commit();
+
+ }catch(PDOException $e)
+ {
+
+   die("执行失败".$e->getMessage());
+   $pdo->rollback();
+
+   /*
+   这里有一个细节 如果事务执行失败 事务回滚 虽然 回滚了
+   会发现 如果下次插入一条 发现 自增长id  1 2 3 7 8 中间
+   一些没有了 因为被失败的事务占用过了
+   */
+ }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

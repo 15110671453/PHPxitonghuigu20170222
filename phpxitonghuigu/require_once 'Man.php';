@@ -1,0 +1,22 @@
+require_once 'Man.php';
+
+class Boy extends Man
+{
+	public function __construct($age,$name)
+	{
+		parent::__construct($age,$name,'小孩');
+	}
+
+	//类继承 后 重写方法
+
+	public function hi()
+	{
+	//父类方法 是否 调用 取决于业务需求
+		//parent::hi();
+
+
+	}
+}
+类继承 继承父类的方法  继承 多态
+-----------------------------------------
+类继承 后 重写

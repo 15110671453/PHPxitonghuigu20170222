@@ -1,0 +1,90 @@
+php字符串 数组 文件 常用功能
+<?php
+//用单双 字符串 字面量
+$str = 'Hello PHP';
+echo $str;
+
+//获取字符串中某个字符 或 某个字符的位置
+
+echo strpos($str,'o');//4
+
+echo strpos($str,'PH');//6
+
+//截取字符串
+
+$str1 = substr($str,2,3);//llo 从012 2的位置开始 一直截取指定位数
+
+
+//分割字符串 默认拆分字符串 拆分后的每个字串的长度 默认为1
+
+$result = str_split($str);
+
+//array to string conversion
+//echo $result;//无法将一个数组当字符串输出 需要使用print_r
+
+
+print_r($result);
+
+$result2 = str_split($str,2);
+
+print_r($result2);
+
+//分割字符串 不固定长度的 比如按照 空格 分割字符串
+
+$str = 'Hello PHP JAVA c# c++';
+
+$result3 = explode('',$str);
+
+
+print_r($result3);
+
+
+
+$num = 100;
+
+$str4 = $str.'</br>Objective-C'.$num;
+
+$str5 = "$str</br>Objective-C $num";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

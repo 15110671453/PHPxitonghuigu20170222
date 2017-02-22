@@ -1,0 +1,162 @@
+php面向对象概念 基础PHP 5中 引入
+
+
+class Hello {
+	
+	//创建公开的方法
+	public function sayHello() {
+
+	 echo " hello world PHP";
+
+	}
+}
+
+require_once "Hello.php";
+
+
+$h = new Hello();
+
+$h->sayHello();
+
+
+
+//同一个 php 文件中 可以写 多个类
+
+class Desktop 
+{
+	
+	public function work() {
+
+	echo 'work';
+
+	}
+}
+//PHP  命名空间 避免 多个公司 库的 类名 重复
+
+namespace myhello;
+
+class Hello {
+	
+	public function sayHello(){
+
+	echo "Hello my Hello world";
+	
+
+
+	}
+}
+---------------------
+
+构造方法 php 类的 构造方法
+
+class Man {
+	
+	private $_age,$_name;
+	//这里的构造方法 是添加参数的
+	//以下 可以做到使用该类时代码提示 参数的数据类型
+	/**
+	*@param int $age 这个人的年龄
+	*@param string $name 这个人的名字 
+	*/
+	public function __construct($age,$name){
+
+	echo "构造方法 在 使用new 实例 对象时 执行该方法";
+
+	$this->_age = $age;
+	$this->_name = $name;
+
+	}
+
+	public function getName()
+	{
+		return $this->_name;
+	}
+	public function getAge()
+	{
+		return $this->_age;
+	}
+
+
+
+}
+
+---------------------------------------
+php中 成员方法 与 类 方法
+
+class Man {
+	
+	private $_age,$_name;
+	//这里的构造方法 是添加参数的
+	//以下 可以做到使用该类时代码提示 参数的数据类型
+	/**
+	*@param int $age 这个人的年龄
+	*@param string $name 这个人的名字 
+	*/
+	public function __construct($age,$name){
+
+	echo "构造方法 在 使用new 实例 对象时 执行该方法";
+
+	$this->_age = $age;
+	$this->_name = $name;
+
+	   Man::$NUM++;
+
+	  if(MAN::$NUM>Man::MAX_MAN_NUM)
+	  {
+
+	  throw new Exception("不能创建那么多");
+
+	  }
+
+	}
+
+	public function getName()
+	{
+		return $this->_name;
+	}
+	public function getAge()
+	{
+		return $this->_age;
+	}
+
+	public function sayHello()
+	{
+		//这个是成员方法 成员方法只能通过实例对象 才能访问
+	}
+	//类方法 并且是 public的
+	public static function sayHello()
+	{
+		echo "静态方法 在什么场合下使用呢";
+		//在调用时 通过类名 双冒号 就可以调用 不需要 实例对象
+	}
+
+	//静态的 private  只能在内部访问
+	private static $NUM = 100;
+	//静态的常量 这个可以在外部 类名 双冒号 访问到 该静态的常量
+	const MAX_MAN_NUM = 200;
+
+	public static function sayHelloMan(){
+
+	echo "Hello Man";
+
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
